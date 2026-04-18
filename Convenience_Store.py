@@ -54,3 +54,6 @@ sales_by_category = {}
 
 # 일일 총 매출
 daily_total = 0
+
+print(get_best_seller(inventory))
+get_sales_by_category(inventory)

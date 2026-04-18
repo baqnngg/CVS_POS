@@ -3,66 +3,77 @@
         "name": "유기농 사과",
         "price": 3000,
         "stock": 50,
-        "category": "식품"
+        "category": "식품",
+        "sold": 10
     },
     "P002": {
         "name": "코카콜라 355ml",
         "price": 1800,
         "stock": 100,
-        "category": "음료"
+        "category": "음료",
+        "sold": 85
     },
     "P003": {
         "name": "삼각김밥 참치마요",
         "price": 1200,
         "stock": 60,
-        "category": "즉석식품"
+        "category": "즉석식품",
+        "sold": 120
     },
     "P004": {
         "name": "새우깡",
         "price": 1500,
         "stock": 80,
-        "category": "과자"
+        "category": "과자",
+        "sold": 47
     },
     "P005": {
         "name": "서울우유 1L",
         "price": 2800,
         "stock": 40,
-        "category": "유제품"
+        "category": "유제품",
+        "sold": 33
     },
     "P006": {
         "name": "맥심 모카골드 커피믹스",
         "price": 900,
         "stock": 150,
-        "category": "음료"
+        "category": "음료",
+        "sold": 200
     },
     "P007": {
         "name": "컵라면 신라면",
         "price": 1300,
         "stock": 90,
-        "category": "즉석식품"
+        "category": "즉석식품",
+        "sold": 95
     },
     "P008": {
         "name": "바나나맛 우유",
         "price": 1600,
         "stock": 55,
-        "category": "유제품"
+        "category": "유제품",
+        "sold": 62
     },
     "P009": {
         "name": "오리온 초코파이",
         "price": 2000,
         "stock": 70,
-        "category": "과자"
+        "category": "과자",
+        "sold": 58
     },
     "P010": {
         "name": "생수 500ml",
         "price": 800,
         "stock": 200,
-        "category": "음료"
+        "category": "음료",
+        "sold": 310
     },
     "P011": {
         "name": "편의점 도시락",
         "price": 4500,
         "stock": 30,
-        "category": "즉석식품"
+        "category": "즉석식품",
+        "sold": 25
     }
 }
