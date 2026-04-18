@@ -115,15 +115,31 @@ def print_daily_report(products):
 # 상품 재고 
 inventory = load_inventory()
 
+# 판매(sold) 초기화 함수
+def reset_sold_counts(filename="inventory.json"):
+    # 1. 파일 읽기
+    with open(filename, "r", encoding="utf-8") as f:
+        inventory = json.load(f)
+    # 2. sold 값 0으로 리셋
+    for product in inventory.values():
+        product["sold"] = 0
+    # 3. 파일에 다시 저장
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(inventory, f, ensure_ascii=False, indent=4)
+
 # 5분마다 재고 확인
-schedule.every(5).seconds.do(check_inventory, inventory)
+# schedule.every(5).seconds.do(check_inventory, inventory)
 
-while 1:
-    print("프로그램 실행중...")
-    schedule.run_pending()
-    time.sleep(1)
+# while 1:
+#     print("프로그램 실행중...")
+#     schedule.run_pending()
+#     time.sleep(1)
 
-# 테스트
-# print(get_best_seller(inventory))
-# get_sales_by_category(inventory)
-# process_cart([["유기농 사과", 43], ["삼각김밥 참치마요", 1]],inventory)
+# 테스트 함수(구매 기능 및 각 기능 테스트)
+# def test():
+#     process_cart([("코카콜라 355ml", 2), ("오리온 초코파이", 1)], inventory)  # 장바구니 처리 테스트
+#     print(get_sales_by_category(inventory))  # 카테고리별 매출 집계 테스트
+#     print(get_best_seller(inventory))  # 베스트셀러 추출 테스트
+#     print_daily_report(inventory)  # 일일 매출 리포트 출력 테스트
+
+# test()
