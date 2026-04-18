@@ -38,12 +38,18 @@ def save_inventory(data):
     with open(INVENTORY_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
-# 재고 확인 함수
-def check_inventory(inventory):
+# 재고 부족 확인 함수
+def check_out_of_stock(inventory):
     for product in inventory.values():
         stock = product.get("stock", 0)
         if stock <= 5:
             print(f"상품 {product.get('name')}의 재고가 부족합니다. (현재 재고: {stock})")
+
+# 재고 확인 함수
+def check_inventory(inventory):
+    print("=== 재고 현황 ===")
+    for product in inventory.values():
+        print(f"{product.get('name')}: {product.get('stock', 0)}개")
 
 # 상품 등록 함수
 def register_product():
@@ -127,13 +133,36 @@ def reset_sold_counts(filename="inventory.json"):
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(inventory, f, ensure_ascii=False, indent=4)
 
+reset_sold_counts()
+
 # 5분마다 재고 확인
-# schedule.every(5).seconds.do(check_inventory, inventory)
+# schedule.every(5).minutes.do(check_out_of_stock, inventory)
 
 # while 1:
-#     print("프로그램 실행중...")
 #     schedule.run_pending()
-#     time.sleep(1)
+#     time.sleep(2)
+#     print("명령어: 상품등록 / 단일상품구매 / 장바구니 / 재고확인/ 재고 부족 확인 / 매출리포트 / 베스트셀러 / 카테고리매출 / sold초기화 / 종료")
+#     n = input("명령어를 입력하세요: ")
+#     print()
+#     if n == "상품등록": register_product()
+#     elif n == "단일상품구매": 
+#         product_name = input("구매할 상품 이름을 입력하세요: ")
+#         sell_product(product_name, inventory)
+#     elif n == "장바구니":
+#         cart = []
+#         item_count = int(input("장바구니에 담을 상품의 종류 수를 입력하세요: "))
+#         for _ in range(item_count):
+#             item = input("상품 이름과 수량을 입력하세요(코카콜라 355ml,2): ").strip(" ").split(",")
+#             cart.append((item[0], int(item[1])))
+#         process_cart(cart, inventory)
+#     elif n == "재고확인": check_inventory(inventory)
+#     elif n == "재고 부족 확인": check_out_of_stock(inventory)
+#     elif n == "매출리포트": print_daily_report(inventory)
+#     elif n == "베스트셀러": print(get_best_seller(inventory))
+#     elif n == "카테고리매출": print(get_sales_by_category(inventory))
+#     elif n == "sold초기화": reset_sold_counts()
+#     elif n == "종료": break
+#     else: print("잘못된 명령어입니다. 다시 입력해주세요.")
 
 # 테스트 함수(구매 기능 및 각 기능 테스트)
 # def test():
