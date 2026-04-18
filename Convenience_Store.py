@@ -1,6 +1,32 @@
 import json
+import schedule
+import time
 
 INVENTORY_FILE = "inventory.json"
+
+# 영수증 출력 함순
+def receipt(cart, inventory, total, out_of_stock):
+    width = 32
+    print("=" * width)
+    print("       편의점 영수증".center(width))
+    print("-" * width)
+    for name, quantity in cart:
+        product = inventory.get(name)
+        if product and name not in out_of_stock:
+            price = product.get("price", 0)
+            print(f"  {name[:12]:<12} x{quantity}  {price * quantity:>6}원")
+    if out_of_stock:
+        print("-" * width)
+        print("  [재고 부족 - 미처리 항목]")
+        for name in out_of_stock:
+            print(f"  {name[:12]:<12}  재고 부족")
+    print("-" * width)
+    print(f"  {'합계':<14} {total:>10,}원")
+    print(f"  {'부가세(10%)':<14} {int(total * 0.1):>9,}원")
+    print(f"  {'총 결제금액':<13} {int(total * 1.1):>9,}원")
+    print("=" * width)
+    print("    감사합니다! 또 방문해주세요 :)")
+    print("=" * width)
 
 # 재고 및 매출 데이터 로드 함수
 def load_inventory():
@@ -13,16 +39,53 @@ def save_inventory(data):
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 # 재고 확인 함수
-def check_inventory(): return
+def check_inventory(inventory):
+    for product in inventory.values():
+        stock = product.get("stock", 0)
+        if stock <= 5:
+            print(f"상품 {product.get('name')}의 재고가 부족합니다. (현재 재고: {stock})")
 
 # 상품 등록 함수
-def register_product(): return
+def register_product():
+    name = input("상품 이름을 입력하세요: ")
+    category = input("상품 카테고리를 입력하세요: ")
+    price = int(input("상품 가격을 입력하세요: "))
+    stock = int(input("상품 재고를 입력하세요: "))
+    inventory[name] = {"name": name, "price": price, "stock": stock, "category": category, "sold": 0}
+    print(f"상품 {name}이(가) 등록되었습니다.")
+    save_inventory(inventory)
 
 # 상품 판매 함수
-def sell_product(): return
+def sell_product(product, inventory):
+    if product not in inventory:
+        print(f"상품 {product}이(가) 존재하지 않습니다.")
+        return
+    elif inventory[product]["stock"] <= 0:
+        print(f"상품 {product}의 재고가 부족합니다.")
+        return
+    inventory[product]["stock"] -= 1
+    inventory[product]["sold"] += 1
+    print(f"상품 {product}이(가) 1개 판매되었습니다.")
+    save_inventory(inventory)
 
-# 장바구니 처리 함수 (여러 상품 한번에 계산)
-def process_cart(): return
+# 장바구니 처리 함수
+def process_cart(cart, inventory):
+    total = 0
+    out_of_stock = []
+    for name, quantity in cart:
+        product = inventory.get(name)
+        stock = product.get("stock", 0)
+
+        if product and stock >= quantity:
+            total += product.get("price", 0) * quantity
+            inventory[name]["stock"] -= quantity
+            inventory[name]["sold"] = inventory[name].get("sold", 0) + quantity
+        else:
+            print(f"상품 {name}의 재고가 부족합니다.")
+            out_of_stock.append(name)
+    save_inventory(inventory)
+    # 프롬프트 : 총결제 금액좀 영수증 처럼 꾸며줘
+    receipt(cart, inventory, total, out_of_stock)
 
 # 카테고리별 매출 집계 함수
 def get_sales_by_category(products):
@@ -44,16 +107,23 @@ def get_best_seller(products):
     return {"name": best["name"], "sold": best["sold"]}
 
 # 일일 매출 리포트 출력 함수
-def print_daily_report(): return
+def print_daily_report(products):
+    daily_total = sum(product.get("sold", 0) * product.get("price", 0) for product in products.values())
+    print(f"=== 일일 매출 리포트 ===")
+    print(f"일일 총 매출: {daily_total:,}원")
 
 # 상품 재고 
 inventory = load_inventory()
 
-# 카테고리별 매출 집계
-sales_by_category = {}
+# 5분마다 재고 확인
+schedule.every(5).seconds.do(check_inventory, inventory)
 
-# 일일 총 매출
-daily_total = 0
+while 1:
+    print("프로그램 실행중...")
+    schedule.run_pending()
+    time.sleep(1)
 
-print(get_best_seller(inventory))
-get_sales_by_category(inventory)
+# 테스트
+# print(get_best_seller(inventory))
+# get_sales_by_category(inventory)
+# process_cart([["유기농 사과", 43], ["삼각김밥 참치마요", 1]],inventory)
