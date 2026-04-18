@@ -51,6 +51,17 @@ def check_inventory(inventory):
     for product in inventory.values():
         print(f"{product.get('name')}: {product.get('stock', 0)}개")
 
+# 재고 추가 함수
+def add_stock(inventory):
+    name = input("재고를 추가할 상품 이름을 입력하세요: ")
+    if name in inventory:
+        quantity = int(input("추가할 재고 수량을 입력하세요: "))
+        inventory[name]["stock"] += quantity
+        print(f"상품 {name}의 재고가 {quantity}개 추가되었습니다. (현재 재고: {inventory[name]['stock']}개)")
+        save_inventory(inventory)
+    else:
+        print(f"상품 {name}이(가) 존재하지 않습니다.")
+
 # 상품 등록 함수
 def register_product():
     name = input("상품 이름을 입력하세요: ")
@@ -137,11 +148,13 @@ reset_sold_counts()
 
 # 5분마다 재고 확인
 schedule.every(5).minutes.do(check_out_of_stock, inventory)
+# 1일마다 판매량 초기화
+schedule.every(1).days.do(reset_sold_counts)
 
 while 1:
     schedule.run_pending()
     time.sleep(2)
-    print("명령어: 상품등록 / 단일상품구매 / 장바구니 / 재고확인/ 재고 부족 확인 / 매출리포트 / 베스트셀러 / 카테고리매출 / sold초기화 / 종료")
+    print("명령어: 상품등록 / 단일상품구매 / 장바구니 / 재고확인/ 재고 부족 확인 / 재고 추가 / 매출리포트 / 베스트셀러 / 카테고리매출 / sold초기화 / 종료")
     n = input("명령어를 입력하세요: ")
     print()
     if n == "상품등록": register_product()
@@ -159,6 +172,7 @@ while 1:
         process_cart(cart, inventory)
     elif n == "재고확인": check_inventory(inventory)
     elif n == "재고 부족 확인": check_out_of_stock(inventory)
+    elif n == "재고 추가": add_stock(inventory)
     elif n == "매출리포트": print_daily_report(inventory)
     elif n == "베스트셀러": print(get_best_seller(inventory))
     elif n == "카테고리매출": print(get_sales_by_category(inventory))
