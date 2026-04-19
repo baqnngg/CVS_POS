@@ -1,8 +1,35 @@
 import json
 import schedule
 import time
+import os
+import subprocess
+import sys
+
+# 개선(claude 프롬프트): schedule 라이브러리가 없을 때 설치하는 코드
+try:
+    import schedule
+except ImportError:
+    print("schedule 라이브러리가 없어 설치합니다...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "schedule"])
+    import schedule
 
 INVENTORY_FILE = "inventory.json"
+
+# 재고 및 매출 데이터 로드 함수 / 개선(claude 프롬프트) : JSON 파일이 없을 때 빈 딕셔너리를 반환하도록 수정해줘
+def load_inventory():
+    if not os.path.exists(INVENTORY_FILE):  # JSON 파일이 없을 때
+        print(f"'{INVENTORY_FILE}' 파일이 없어 새로 생성합니다.")
+        empty = {}
+        with open(INVENTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(empty, f, ensure_ascii=False, indent=4)
+        return empty
+    with open(INVENTORY_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+# 재고 및 매출 데이터 저장 함수
+def save_inventory(data):
+    with open(INVENTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
 
 # 영수증 출력 함수
 def receipt(cart, inventory, total, out_of_stock):
@@ -29,16 +56,6 @@ def receipt(cart, inventory, total, out_of_stock):
     print("=" * width)
     print("    감사합니다! 또 방문해주세요 :)")
     print("=" * width)
-
-# 재고 및 매출 데이터 로드 함수
-def load_inventory():
-    with open(INVENTORY_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-# 재고 및 매출 데이터 저장 함수
-def save_inventory(data):
-    with open(INVENTORY_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
 
 # 재고 부족 확인 함수
 def check_out_of_stock(inventory):
