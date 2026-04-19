@@ -10,12 +10,12 @@ def receipt(cart, inventory, total, out_of_stock):
     print("=" * width)
     print("       편의점 영수증".center(width))
     print("-" * width)
-    for name, quantity in cart:
+    for name, quantity in cart: # 장바구니 항목 출력
         product = inventory.get(name)
         if product and name not in out_of_stock:
             price = product.get("price", 0)
             print(f"  {name[:12]:<12} x{quantity}  {price * quantity:>7,}원")
-    if out_of_stock:
+    if out_of_stock: # 재고 부족 항목이 있을 때 출력
         print("-" * width)
         print("  [재고 부족 - 미처리 항목]")
         for name in out_of_stock:
@@ -76,32 +76,32 @@ def register_product():
 
 # 상품 판매 함수
 def sell_product(product, inventory):
-    if product not in inventory:
+    if product not in inventory: # 상품이 존재하지 않을 때 처리
         print(f"상품 {product}이(가) 존재하지 않습니다.")
-        return False
-    elif inventory[product]["stock"] <= 0:
+        return False # 판매 실패를 나타내는 False 반환
+    elif inventory[product]["stock"] <= 0: # 재고가 부족할 때 처리
         print(f"상품 {product}의 재고가 부족합니다.")
-        return False
+        return False # 판매 실패를 나타내는 False 반환
     
     inventory[product]["stock"] -= 1
     inventory[product]["sold"] += 1
     print(f"상품 {product}이(가) 1개 판매되었습니다.")
     save_inventory(inventory)
-    return True
+    return True # 판매 성공을 나타내는 True 반환
 
 # 장바구니 처리 함수
 def process_cart(cart, inventory):
     total = 0
     out_of_stock = []
-    for name, quantity in cart:
+    for name, quantity in cart: 
         product = inventory.get(name)
         stock = product.get("stock", 0)
 
-        if product and stock >= quantity:
+        if product and stock >= quantity: # 재고가 충분할 때 처리
             total += product.get("price", 0) * quantity
             inventory[name]["stock"] -= quantity
             inventory[name]["sold"] = inventory[name].get("sold", 0) + quantity
-        else:
+        else: # 재고가 부족할 때 처리
             print(f"상품 {name}의 재고가 부족합니다.")
             out_of_stock.append(name)
     save_inventory(inventory)
@@ -111,7 +111,7 @@ def process_cart(cart, inventory):
 # 카테고리별 매출 집계 함수
 def get_sales_by_category(products):
     sales_by_category = {}
-    for product in products.values():
+    for product in products.values(): 
         category = product.get("category")
         sales = product.get("sold", 0) * product.get("price", 0)
         if category:
@@ -162,7 +162,7 @@ while 1:
     n = input("명령어를 입력하세요: ")
     print()
     if n == "상품등록": register_product()
-    elif n == "단일상품구매":
+    elif n == "단일상품구매": # 단일 상품 구매 처리
         product_name = input("구매할 상품 이름을 입력하세요: ")
         
         if product_name not in inventory:
@@ -173,21 +173,21 @@ while 1:
             receipt([(product_name, 1)], inventory, inventory[product_name]["price"], [])
         else:
             receipt([(product_name, 1)], inventory, 0, [product_name])
-    elif n == "장바구니":
+    elif n == "장바구니": # 장바구니 처리
         cart = []
         while True:
             check = input("상품을 확인하고 싶으신가요?(y/n): ")
             if check in ("y", "n"):
                 break
             print("y 또는 n만 입력해주세요.")
-        if check == "y":
+        if check == "y": # 사용자가 상품 확인을 원할 때 재고 현황 출력
             check_inventory(inventory)
         item_count = int(input("장바구니에 담을 상품의 종류 수를 입력하세요: "))
-        for _ in range(item_count):
+        for _ in range(item_count): 
             item = input("상품 이름과 수량을 입력하세요(예: 코카콜라 355ml,2): ").strip(" ").split(",")
             cart.append((item[0], int(item[1])))
         process_cart(cart, inventory)
-    elif n == "재고확인": check_inventory(inventory)
+    elif n == "재고확인": check_inventory(inventory) 
     elif n == "재고 부족 확인": check_out_of_stock(inventory)
     elif n == "재고 추가": add_stock(inventory)
     elif n == "매출리포트": print_daily_report(inventory)
