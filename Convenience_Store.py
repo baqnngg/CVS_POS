@@ -134,7 +134,7 @@ def print_daily_report(products):
     print(f"일일 총 매출: {daily_total:,}원")
 
 # 상품 재고 
-inventory = load_inventory()
+inventory = dict(load_inventory())
 
 # 판매(sold) 초기화 함수
 def reset_sold_counts(inventory):
@@ -142,6 +142,7 @@ def reset_sold_counts(inventory):
     for product in inventory.values():
         inventory[product["name"]]["sold"] = 0
     save_inventory(inventory) # 저장
+    print("판매량이 초기화되었습니다.")
 
 reset_sold_counts(inventory)
 
@@ -180,6 +181,9 @@ while 1:
         item_count = int(input("장바구니에 담을 상품의 종류 수를 입력하세요: "))
         for _ in range(item_count): 
             item = input("상품 이름과 수량을 입력하세요(예: 코카콜라 355ml,2): ").replace(" ", "").split(",")
+            if item[0] not in inventory:
+                print(f"상품 {item[0]}이(가) 존재하지 않습니다. 이 항목은 장바구니에 추가되지 않습니다.")
+                continue
             cart.append((item[0], int(item[1])))
         process_cart(cart, inventory)
     elif n == "재고확인": check_inventory(inventory) 

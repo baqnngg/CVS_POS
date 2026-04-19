@@ -79,15 +79,22 @@
     "바나나우유": {
         "name": "바나나우유",
         "price": 1400,
-        "stock": 4,
+        "stock": 3,
         "category": "음료",
-        "sold": 0
+        "sold": 1
     },
     "메로나": {
         "name": "메로나",
         "price": 500,
-        "stock": 99,
+        "stock": 89,
         "category": "아이스크림",
-        "sold": 1
+        "sold": 20
+    },
+    "유기농 바나나": {
+        "name": "유기농 바나나",
+        "price": 5000,
+        "stock": 200,
+        "category": "식품",
+        "sold": 0
     }
 }
