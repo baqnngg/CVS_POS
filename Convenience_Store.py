@@ -14,7 +14,7 @@ def receipt(cart, inventory, total, out_of_stock):
         product = inventory.get(name)
         if product and name not in out_of_stock:
             price = product.get("price", 0)
-            print(f"  {name[:12]:<12} x{quantity}  {price * quantity:>6}원")
+            print(f"  {name[:12]:<12} x{quantity}  {price * quantity:>7,}원")
     if out_of_stock:
         print("-" * width)
         print("  [재고 부족 - 미처리 항목]")
@@ -51,7 +51,7 @@ def check_out_of_stock(inventory):
 def check_inventory(inventory):
     print("=== 재고 현황 ===")
     for product in inventory.values():
-        print(f"{product.get('name')}: {product.get('stock', 0)}개")
+        print(f"{product.get('name')}({product.get('price'):,}원): {product.get('stock', 0)}개")
 
 # 재고 추가 함수
 def add_stock(inventory):
