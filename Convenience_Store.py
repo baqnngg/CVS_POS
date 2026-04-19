@@ -65,7 +65,7 @@ def add_stock(inventory):
         print(f"상품 {name}이(가) 존재하지 않습니다.")
 
 # 상품 등록 함수
-def register_product():
+def register_product(inventory):
     name = input("상품 이름을 입력하세요: ")
     category = input("상품 카테고리를 입력하세요: ")
     price = int(input("상품 가격을 입력하세요: "))
@@ -139,8 +139,9 @@ inventory = dict(load_inventory())
 # 판매(sold) 초기화 함수
 def reset_sold_counts(inventory):
     # inventory의 모든 상품에 대해 sold 값을 0으로 초기화
+    # claude : inventory.values()를 순회하면 product는 각 상품 딕셔너리의 복사본이 아닌 원본을 가리키는 참조입니다
     for product in inventory.values():
-        inventory[product["name"]]["sold"] = 0
+        product["sold"] = 0
     save_inventory(inventory) # 저장
     print("판매량이 초기화되었습니다.")
 
@@ -157,7 +158,7 @@ while 1:
     print("명령어: 상품등록 / 단일상품구매 / 장바구니 / 재고확인 / 재고 부족 확인 / 재고 추가 / 매출리포트 / 베스트셀러 / 카테고리매출 / sold초기화 / 종료")
     n = input("명령어를 입력하세요: ").replace(" ", "")
     print()
-    if n == "상품등록": register_product()
+    if n == "상품등록": register_product(inventory)
     elif n == "단일상품구매": # 단일 상품 구매 처리
         product_name = input("구매할 상품 이름을 입력하세요: ")
         
