@@ -154,7 +154,7 @@ while 1:
     schedule.run_pending()
     time.sleep(2)
     print("명령어: 상품등록 / 단일상품구매 / 장바구니 / 재고확인 / 재고 부족 확인 / 재고 추가 / 매출리포트 / 베스트셀러 / 카테고리매출 / sold초기화 / 종료")
-    n = input("명령어를 입력하세요: ").strip(" ")
+    n = input("명령어를 입력하세요: ").replace(" ", "")
     print()
     if n == "상품등록": register_product()
     elif n == "단일상품구매": # 단일 상품 구매 처리
@@ -179,7 +179,7 @@ while 1:
             check_inventory(inventory)
         item_count = int(input("장바구니에 담을 상품의 종류 수를 입력하세요: "))
         for _ in range(item_count): 
-            item = input("상품 이름과 수량을 입력하세요(예: 코카콜라 355ml,2): ").strip(" ").split(",")
+            item = input("상품 이름과 수량을 입력하세요(예: 코카콜라 355ml,2): ").replace(" ", "").split(",")
             cart.append((item[0], int(item[1])))
         process_cart(cart, inventory)
     elif n == "재고확인": check_inventory(inventory) 
