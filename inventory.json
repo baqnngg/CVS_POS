@@ -86,8 +86,8 @@
     "메로나": {
         "name": "메로나",
         "price": 500,
-        "stock": 100,
+        "stock": 99,
         "category": "아이스크림",
-        "sold": 0
+        "sold": 1
     }
 }

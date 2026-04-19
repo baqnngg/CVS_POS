@@ -188,15 +188,6 @@ while 1:
     elif n == "매출리포트": print_daily_report(inventory)
     elif n == "베스트셀러": print(get_best_seller(inventory))
     elif n == "카테고리매출": print(get_sales_by_category(inventory))
-    elif n == "sold초기화": reset_sold_counts()
+    elif n == "sold초기화": reset_sold_counts(inventory)
     elif n == "종료": break
     else: print("잘못된 명령어입니다. 다시 입력해주세요.")
-
-# 테스트 함수(구매 기능 및 각 기능 테스트)
-# def test():
-#     process_cart([("코카콜라 355ml", 2), ("오리온 초코파이", 1)], inventory)  # 장바구니 처리 테스트
-#     print(get_sales_by_category(inventory))  # 카테고리별 매출 집계 테스트
-#     print(get_best_seller(inventory))  # 베스트셀러 추출 테스트
-#     print_daily_report(inventory)  # 일일 매출 리포트 출력 테스트
-
-# test()
