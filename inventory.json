@@ -25,7 +25,7 @@
         "price": 1500,
         "stock": 68,
         "category": "과자",
-        "sold": 12
+        "sold": 0
     },
     "서울우유 1L": {
         "name": "서울우유 1L",
@@ -81,6 +81,13 @@
         "price": 1400,
         "stock": 4,
         "category": "음료",
-        "sold": 1
+        "sold": 0
+    },
+    "메로나": {
+        "name": "메로나",
+        "price": 500,
+        "stock": 100,
+        "category": "아이스크림",
+        "sold": 0
     }
 }

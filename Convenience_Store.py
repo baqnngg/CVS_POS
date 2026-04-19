@@ -105,7 +105,7 @@ def process_cart(cart, inventory):
             print(f"상품 {name}의 재고가 부족합니다.")
             out_of_stock.append(name)
     save_inventory(inventory)
-    # 프롬프트 : 총결제 금액좀 영수증 처럼 꾸며줘
+    # 프롬프트 : 총결제 금액을 영수증 처럼 꾸며줘
     receipt(cart, inventory, total, out_of_stock)
 
 # 카테고리별 매출 집계 함수
@@ -137,28 +137,23 @@ def print_daily_report(products):
 inventory = load_inventory()
 
 # 판매(sold) 초기화 함수
-def reset_sold_counts(filename="inventory.json"):
-    # 1. 파일 읽기
-    with open(filename, "r", encoding="utf-8") as f:
-        inventory = json.load(f)
-    # 2. sold 값 0으로 리셋
+def reset_sold_counts(inventory):
+    # inventory의 모든 상품에 대해 sold 값을 0으로 초기화
     for product in inventory.values():
-        product["sold"] = 0
-    # 3. 파일에 다시 저장
-    with open(filename, "w", encoding="utf-8") as f:
-        json.dump(inventory, f, ensure_ascii=False, indent=4)
+        inventory[product["name"]]["sold"] = 0
+    save_inventory(inventory) # 저장
 
-reset_sold_counts()
+reset_sold_counts(inventory)
 
 # 5분마다 재고 확인
 schedule.every(5).minutes.do(check_out_of_stock, inventory)
 # 1일마다 판매량 초기화
-schedule.every(1).days.do(reset_sold_counts)
+schedule.every(1).days.do(reset_sold_counts, inventory)
 
 while 1:
     schedule.run_pending()
     time.sleep(2)
-    print("명령어: 상품등록 / 단일상품구매 / 장바구니 / 재고확인/ 재고 부족 확인 / 재고 추가 / 매출리포트 / 베스트셀러 / 카테고리매출 / sold초기화 / 종료")
+    print("명령어: 상품등록 / 단일상품구매 / 장바구니 / 재고확인 / 재고 부족 확인 / 재고 추가 / 매출리포트 / 베스트셀러 / 카테고리매출 / sold초기화 / 종료")
     n = input("명령어를 입력하세요: ").strip(" ")
     print()
     if n == "상품등록": register_product()
