@@ -4,7 +4,7 @@ import time
 
 INVENTORY_FILE = "inventory.json"
 
-# 영수증 출력 함순
+# 영수증 출력 함수
 def receipt(cart, inventory, total, out_of_stock):
     width = 32
     print("=" * width)
@@ -21,9 +21,11 @@ def receipt(cart, inventory, total, out_of_stock):
         for name in out_of_stock:
             print(f"  {name[:12]:<12}  재고 부족")
     print("-" * width)
-    print(f"  {'합계':<14} {total:>10,}원")
-    print(f"  {'부가세(10%)':<14} {int(total * 0.1):>9,}원")
-    print(f"  {'총 결제금액':<13} {int(total * 1.1):>9,}원")
+    vat = int(total / 11)
+    supply = total - vat
+    print(f"  {'공급가액':<14} {supply:>10,}원")
+    print(f"  {'부가세(10%)':<14} {vat:>9,}원")
+    print(f"  {'총 결제금액':<13} {total:>9,}원")
     print("=" * width)
     print("    감사합니다! 또 방문해주세요 :)")
     print("=" * width)
@@ -76,14 +78,16 @@ def register_product():
 def sell_product(product, inventory):
     if product not in inventory:
         print(f"상품 {product}이(가) 존재하지 않습니다.")
-        return
+        return False
     elif inventory[product]["stock"] <= 0:
         print(f"상품 {product}의 재고가 부족합니다.")
-        return
+        return False
+    
     inventory[product]["stock"] -= 1
     inventory[product]["sold"] += 1
     print(f"상품 {product}이(가) 1개 판매되었습니다.")
     save_inventory(inventory)
+    return True
 
 # 장바구니 처리 함수
 def process_cart(cart, inventory):
@@ -158,16 +162,29 @@ while 1:
     n = input("명령어를 입력하세요: ")
     print()
     if n == "상품등록": register_product()
-    elif n == "단일상품구매": 
+    elif n == "단일상품구매":
         product_name = input("구매할 상품 이름을 입력하세요: ")
-        sell_product(product_name, inventory)
+        
+        if product_name not in inventory:
+            print(f"상품 {product_name}이(가) 존재하지 않습니다.")
+            continue
+        success = sell_product(product_name, inventory)
+        if success:
+            receipt([(product_name, 1)], inventory, inventory[product_name]["price"], [])
+        else:
+            receipt([(product_name, 1)], inventory, 0, [product_name])
     elif n == "장바구니":
         cart = []
-        check = input("상품을 확인하고 싶으신가요?(y/n): ")
-        if check == "y": check_inventory(inventory)
+        while True:
+            check = input("상품을 확인하고 싶으신가요?(y/n): ")
+            if check in ("y", "n"):
+                break
+            print("y 또는 n만 입력해주세요.")
+        if check == "y":
+            check_inventory(inventory)
         item_count = int(input("장바구니에 담을 상품의 종류 수를 입력하세요: "))
         for _ in range(item_count):
-            item = input("상품 이름과 수량을 입력하세요(코카콜라 355ml,2): ").strip(" ").split(",")
+            item = input("상품 이름과 수량을 입력하세요(예: 코카콜라 355ml,2): ").strip(" ").split(",")
             cart.append((item[0], int(item[1])))
         process_cart(cart, inventory)
     elif n == "재고확인": check_inventory(inventory)
