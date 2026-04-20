@@ -1,5 +1,4 @@
 import json
-import schedule
 import time
 import os
 import subprocess
@@ -19,10 +18,25 @@ INVENTORY_FILE = "inventory.json"
 def load_inventory():
     if not os.path.exists(INVENTORY_FILE):  # JSON 파일이 없을 때
         print(f"'{INVENTORY_FILE}' 파일이 없어 새로 생성합니다.")
-        empty = {}
+        empty = {"유기농 사과": {
+                    "name": "유기농 사과",
+                    "price": 3000,
+                    "stock": 42,
+                    "category": "식품",
+                    "sold": 0
+                },
+                "코카콜라 355ml": {
+                    "name": "코카콜라 355ml",
+                    "price": 1800,
+                    "stock": 100,
+                    "category": "음료",
+                    "sold": 0
+                },}
+        # 쓰기
         with open(INVENTORY_FILE, "w", encoding="utf-8") as f:
             json.dump(empty, f, ensure_ascii=False, indent=4)
         return empty
+    # 읽기
     with open(INVENTORY_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 
