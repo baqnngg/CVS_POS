@@ -1,7 +1,16 @@
 import json
 import os
 from datetime import datetime
-from flask import Flask, jsonify, request, send_from_directory
+import subprocess
+import sys
+
+
+try:
+    from flask import Flask, jsonify, request, send_from_directory
+except ImportError:
+    print("flask 라이브러리가 없어 설치합니다...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "flask"])
+    from flask import Flask, jsonify, request, send_from_directory
 
 app = Flask(__name__)
 INVENTORY_FILE = "inventory.json"
