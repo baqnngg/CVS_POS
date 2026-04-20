@@ -212,7 +212,7 @@ while 1:
             check_inventory(inventory)
         item_count = int(input("장바구니에 담을 상품의 종류 수를 입력하세요: "))
         for _ in range(item_count): 
-            item = input("상품 이름과 수량을 입력하세요(예: 코카콜라 355ml,2): ").replace(" ", "").split(",")
+            item = input("상품 이름과 수량을 입력하세요(예: 코카콜라 355ml,2): ").split(",")
             if item[0] not in inventory:
                 print(f"상품 {item[0]}이(가) 존재하지 않습니다. 이 항목은 장바구니에 추가되지 않습니다.")
                 continue
